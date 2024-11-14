@@ -1,6 +1,6 @@
 package service
 
-import "file-structure/internal/model"
+import "github.com/front-go/gateway/internal/model"
 
 type Service struct {
 }
