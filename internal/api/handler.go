@@ -18,8 +18,9 @@ func NewHandler(srv SrvI) *Handler {
 }
 
 type RequestData struct {
-	Name    string `json:"name"`
-	Address string `json:"address"`
+	Passport Passport `json:"passport"`
+	Address  Address  `json:"address"`
+	FullName FullName `json:"fullname"`
 }
 
 type ResponseData struct {
@@ -47,7 +48,7 @@ func (h *Handler) Handle(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Println(req.Address)
 		res := ResponseData{
-			Result: req.Address + req.Name,
+			Result: `Пользователь` + " " + req.FullName.Surname + " " + "зарегистрирован",
 		}
 		data, err := json.Marshal(res)
 		if err != nil {
