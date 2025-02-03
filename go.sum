@@ -1,0 +1,4 @@
+github.com/front-go/auth v0.0.0-20241226125256-f0125e5c7e11 h1:A6mz6voyjE3o7tsIXeI/5O9faHB5lVEb2+jT4g81LEE=
+github.com/front-go/auth v0.0.0-20241226125256-f0125e5c7e11/go.mod h1:+DFAPI1oChNFJZnAdaB7wuE/o6dk73FcVsP7s8mfmAQ=
+github.com/go-chi/chi/v5 v5.2.0 h1:Aj1EtB0qR2Rdo2dG4O94RIU35w2lvQSj6BRA4+qwFL0=
+github.com/go-chi/chi/v5 v5.2.0/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=

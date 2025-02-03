@@ -1,10 +1,9 @@
 package api
 
-import "github.com/front-go/gateway/internal/model"
-
-type SrvI interface {
-	Summator(in *model.In)
-}
+import (
+	"context"
+	"github.com/front-go/gateway/internal/model"
+)
 
 type Address struct {
 	Street string `json:"street"`
@@ -22,18 +21,6 @@ type FullName struct {
 	Surname string `json:"surname"`
 }
 
-// {
-// 	"passport": {
-// 	  "number": "1234567890",
-// 	  "series": "AB"
-// 	},
-// 	"address": {
-// 	  "street": "Улица Ленина",
-// 	  "city": "Москва",
-// 	  "state": "Москва"
-// 	},
-// 	"fullname": {
-// 	  "name": "Иван",
-// 	  "surname": "Иванов"
-// 	}
-//   }
+type AuthClient interface {
+	DoSignup(ctx context.Context, signupInfo model.UserSignup) (bool, error)
+}
