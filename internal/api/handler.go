@@ -2,18 +2,21 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/front-go/gateway/internal/model"
+	"github.com/go-chi/chi/v5"
 	"io"
 	"log"
 	"net/http"
 )
 
 type Handler struct {
-	srv SrvI
+	// Сюда подключать будем интересующие службы
+	authC AuthClient
 }
 
-func NewHandler(srv SrvI) *Handler {
+func NewHandler(authC AuthClient) *Handler {
 	return &Handler{
-		srv: srv,
+		authC: authC,
 	}
 }
 
@@ -28,7 +31,6 @@ type ResponseData struct {
 }
 
 func (h *Handler) Handle(w http.ResponseWriter, r *http.Request) {
-	//h.srv.Summator(inModel)
 	switch r.Method {
 	case http.MethodGet:
 		w.Write([]byte("hello world"))
@@ -60,4 +62,34 @@ func (h *Handler) Handle(w http.ResponseWriter, r *http.Request) {
 		w.Write(data)
 	}
 
+}
+
+func (h *Handler) Signup(w http.ResponseWriter, r *http.Request) {
+	bytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	var req model.UserSignup
+	err = json.Unmarshal(bytes, &req)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	isOk, err := h.authC.DoSignup(r.Context(), req)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	log.Println(isOk)
+	w.WriteHeader(http.StatusCreated)
+}
+
+func AttachHandlers(r chi.Router, handler *Handler) {
+	r.Route("/api", func(apiRouter chi.Router) {
+		apiRouter.Post("/signup", handler.Signup)
+	})
 }

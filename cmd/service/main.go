@@ -2,23 +2,22 @@ package main
 
 import (
 	"github.com/front-go/gateway/internal/api"
-	"github.com/front-go/gateway/internal/service"
+	"github.com/front-go/gateway/internal/client/auth"
+	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
 )
 
 func main() {
-	srv := service.NewService()
+	authClient := auth.NewClient()
 
-	handler := api.NewHandler(srv)
+	handler := api.NewHandler(authClient)
 
-	http.HandleFunc("/", handler.Handle)
-	http.HandleFunc("/test", handler.Handle)
-	http.HandleFunc("/{q}", func(writer http.ResponseWriter, request *http.Request) {
-		writer.WriteHeader(http.StatusNotFound)
-	})
+	router := chi.NewRouter()
 
-	err := http.ListenAndServe(":3131", nil)
+	api.AttachHandlers(router, handler)
+
+	err := http.ListenAndServe(":3131", router)
 	if err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
